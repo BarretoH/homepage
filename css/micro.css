@@ -1,0 +1,68 @@
+body {color: rgb(18%,19%,17%); background: #ffffff);
+ font: 0.75em Verdana, sans-serif;
+ margin: 0; padding: 0;}
+
+div#main {margin-right: 21.5%; padding: 2em 3em 2em 3.25em;}
+ul {margin-top: 0.2em;}
+ul li {list-style: outside square;
+  margin-bottom: 0.33em;}
+ul ul {margin-left: 0; padding-left: 1.5em;}
+ul ul li {list-style: none; margin-top: 0;}
+
+dl {margin-top: 0.25em;}
+dl dt {font-weight: bold; margin: 0;}
+dl dd {margin: 0.33em 0 1em 1em; padding: 0;}
+dl pre b {font-weight: normal; color: maroon;}
+
+#main h4 {margin-top: 2em; border-bottom: 1px solid gray;}
+#main h3 {margin-top: 2em; border-bottom: 1px solid #ccccff; font: bold 1.5em Arial, Verdana, sans-serif;}
+
+#sitemast {
+	margin: 0;
+	padding: 0 0 1em;
+	border: 1px solid #ccccff;
+	border-width: 0 0 1px 1.5em;
+	background: #ccccff 100% -25px no-repeat;
+	}
+#sitemast h1 {
+	margin: 0;
+	padding: 1.5em 0.5em 0 0;
+	font: bold 2.5em/0.75em Arial, Verdana, sans-serif;
+	background: #ccccff url(../images/masthead.gif) 90% 0px no-repeat;
+	}
+	
+.sublinks, #sidecap, #sitenav h4 {display: block;}
+#sitenav {background-color: transparent; border: 0 none;}
+div.sublinks {display: none;}
+
+
+div#sitenav {border-left: 2px solid #ccccff; border-bottom: 2px solid #ccccff;
+   float: right; width: 21%; font-size: 90%; 
+   margin: -1.33em 0 0; padding: 0;}
+   
+div#sitenav h4 {padding: 0.15em 0 0 0.5em; margin: 0 0 0.25em;
+   font-size: 100%; letter-spacing: 0.15em; margin-left: -2px;
+   background: #ccccff; }
+div#sitenav a {display: block; 
+   padding: 0.5em 0.5em 0 0.66em; margin-right: 5%;
+   border-bottom: 1px solid white; text-decoration: none;}
+div#sitenav a:link {color: #000000;}
+div#sitenav a:visited {color: #000000;}
+div#sitenav a:hover {color: #000000;
+   border-bottom-color: #E20000;
+   background: transparent }
+div#sitenav a:active {color: #000000;}
+
+div#sitenav div.sublinks {font-size: 90%;
+   padding-bottom: 0.5em;}
+div#sitenav div.sublinks a {padding: 0.25em 10px 0 2.5em;
+   text-indent: -0.75em; margin-right: 13%;}
+div#sitenav a#homelink {margin-top: 1em; padding-top: 0.1em;
+   border-left: 2px solid rgb(69%,75%,85%);}
+   
+div#footer {font-size: 75%; text-align: center;
+   background: #ccccff;
+   border-top: 1px solid #E7977F;
+   padding: 0.5em 1em 0.25em; width: auto;
+   clear: both;
+  }
