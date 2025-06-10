@@ -1,0 +1,184 @@
+                     Company Confidential
+                 Order Summary for November 2007
+
+State       Channel    Price  Category           Qty   Dollars 
+=========== ========== ====== ============== ======== =========
+Washington  Retail     Mid    Kids                 9      40.5 
+                       Low                       143    434.06 
+                       High   Art                 17      93.5 
+                       Mid                        23     103.5 
+                       High   Sports              26       143 
+                       Mid                         6        27 
+                       Low                         4        14 
+                       High   Seattle             13      71.5 
+                       Mid                         7      31.5 
+                       Low                        25      87.5 
+                       Mid    Dinosaurs           22        99 
+                       Low                        22        77 
+                       Mid    Humor              143    554.32 
+                       Low                        13      45.5 
+                       Mid    Nature              35     157.5 
+                       Low                        40       140 
+            Wholesale  Mid    Kids                30      67.5 
+                       Low                        10      17.5 
+                       High   Art                410  1,062.13 
+                       Mid                       900  1,848.48 
+                       High   Sports              25     68.75 
+                       Mid                        30      67.5 
+                       Low                         5      8.75 
+                       High   Seattle            910  2,134.83 
+                       Mid                        60       135 
+                       Low                       405     687.6 
+                       Mid    Dinosaurs          660  1,401.08 
+                       Low                       345     586.6 
+                       Mid    Humor               65    146.25 
+                       Low                        25     43.75 
+                       Mid    Nature             210    459.16 
+                       Low                       195    341.25 
+Oregon      Retail     Mid    Kids               109     490.5 
+                       Low                       405  1,112.35 
+                       High   Art                150    737.03 
+                       Mid                        65     292.5 
+                       High   Sports              12        66 
+                       Mid                       207    853.08 
+                       Low                        13      45.5 
+                       High   Seattle             60       330 
+                       Mid                        35     157.5 
+                       Low                        45     157.5 
+                       Mid    Dinosaurs          230    915.22 
+                       Low                        75     262.5 
+                       Mid    Humor              575  1,212.91 
+                       Low                       135    406.73 
+                       Mid    Nature             165    655.88 
+                       Low                       435  1,239.63 
+            Wholesale  Mid    Kids               325    710.34 
+                       Low                       945  1,557.91 
+                       High   Art                900  2,196.42 
+                       Mid                        40        90 
+                       High   Sports              65    178.75 
+                       Mid                        60       135 
+                       Low                        10      17.5 
+                       High   Seattle            130     357.5 
+                       Mid                        35     78.75 
+                       Low                        55     96.25 
+                       Mid    Dinosaurs           75    168.75 
+                       Low                        40        70 
+                       Mid    Humor              245    535.01 
+                       Low                        95    166.25 
+                       Mid    Nature             325    709.57 
+                       Low                       295    501.69 
+California  Retail     Mid    Kids                27     121.5 
+                       Low                        38       133 
+                       High   Art                165    793.04 
+                       Mid                       120       540 
+                       Mid    Sports              45     202.5 
+                       Mid    Dinosaurs           30       135 
+                       Low                        60       210 
+                       Mid    Humor               90       405 
+                       Low                       105     367.5 
+                       Mid    Nature              60       270 
+                       Low                        75     262.5 
+            Wholesale  Mid    Kids                35     78.75 
+                       Low                       250    424.39 
+                       High   Art                 30      82.5 
+                       Mid                       210     458.8 
+                       High   Sports              40       110 
+                       Mid                        65    146.25 
+                       Low                        55     96.25 
+                       Mid    Dinosaurs          150     337.5 
+                       Low                       240    407.57 
+                       Mid    Humor              165    371.25 
+                       Low                       435    738.58 
+                       Mid    Nature             210    458.65 
+                       Low                       225    393.75 
+Arizona     Retail     Mid    Kids                98       441 
+                       Low                        56       196 
+                       High   Art                 53     291.5 
+                       Mid                       208    676.39 
+                       High   Sports              62       341 
+                       Mid                        16        72 
+                       Low                        13      45.5 
+                       Mid    Dinosaurs          137    553.12 
+                       Low                       107     374.5 
+                       Mid    Humor               17      76.5 
+                       Low                        65     227.5 
+                       Mid    Nature              66       297 
+                       Low                        12        42 
+            Wholesale  Mid    Kids               145    326.25 
+                       Low                        40        70 
+                       High   Art                145    398.75 
+                       Mid                       100       225 
+                       High   Sports              95    261.25 
+                       Mid                       120       270 
+                       Low                        25     43.75 
+                       Mid    Dinosaurs          315    688.69 
+                       Low                       235    411.25 
+                       Mid    Humor               40        90 
+                       Low                        20        35 
+                       Mid    Nature              90     202.5 
+                       Low                        40        70 
+Nevada      Retail     Mid    Kids               476  1,977.00 
+                       Low                        53     185.5 
+                       High   Art                410  1,422.41 
+                       Mid                       145    577.53 
+                       High   Sports             647  1,261.55 
+                       Mid                        70       315 
+                       Low                       115     402.5 
+                       Mid    Dinosaurs          185    724.07 
+                       Low                       155     542.5 
+                       Mid    Humor               90       405 
+                       Low                        85     297.5 
+                       Mid    Nature             120    477.75 
+                       Low                       115     402.5 
+            Wholesale  Mid    Kids                35     78.75 
+                       Low                        55     96.25 
+                       High   Art                345    893.79 
+                       Mid                        70     157.5 
+                       High   Sports              50     137.5 
+                       Mid                        15     33.75 
+                       Low                        20        35 
+                       Mid    Dinosaurs           85    191.25 
+                       Low                        70     122.5 
+                       Mid    Humor               80       180 
+                       Low                        30      52.5 
+                       Mid    Nature              80       180 
+                       Low                        65    113.75 
+Utah        Retail     Mid    Kids                64       288 
+                       Low                       124       434 
+                       High   Art                 40       220 
+                       Mid                        50       225 
+                       High   Sports              25     137.5 
+                       Mid                        15      67.5 
+                       Mid    Dinosaurs           75     337.5 
+                       Low                       160       560 
+                       Mid    Humor               45     202.5 
+                       Low                        35     122.5 
+                       Mid    Nature             270    908.97 
+                       Low                       120       420 
+            Wholesale  Mid    Kids               160       360 
+                       Low                        85    148.75 
+                       High   Art                690  1,731.61 
+                       Mid                       270    589.49 
+                       High   Sports             435  1,128.25 
+                       Mid                        25     56.25 
+                       Low                       925  1,474.05 
+                       Mid    Dinosaurs          285    622.49 
+                       Low                       150     262.5 
+                       Mid    Humor              660  1,399.20 
+                       Low                       570     940.1 
+                       Mid    Nature             300    655.97 
+                       Low                       240    407.78 
+Idaho       Retail     Mid    Kids                56       252 
+                       Low                        64       224 
+                       High   Art                 75     412.5 
+                       Mid                        90       405 
+                       High   Sports              28       154 
+                       Mid                       230    754.81 
+                       Low                       272    698.06 
+                       Mid    Dinosaurs           55     247.5 
+                       Low                        65     227.5 
+                       Mid    Humor               75     337.5 
+                       Low                        70       245 
+                       Mid    Nature              60       270 
+                       Low                        55     192.5 
+

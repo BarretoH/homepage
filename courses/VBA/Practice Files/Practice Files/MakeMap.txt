@@ -1,0 +1,37 @@
+Sub MakeMapButtons()
+    Dim s As Shape
+    
+    myNumber = 4
+    myName = "Washington"
+    myCaption = "WA"
+    myColor = 6
+    
+'    myNumber = 3
+'    myName = "Oregon"
+'    myCaption = "OR"
+'    myColor = 9
+    
+    Set s = ActiveSheet.Shapes(1).GroupItems(myNumber)
+    's.Select
+    s.Name = myName
+    
+    s.Fill.ForeColor.ObjectThemeColor = myColor
+    s.ThreeD.BevelTopDepth = 6
+    
+    Set tf = s.TextFrame2
+    s.TextFrame2.TextRange = myCaption
+    s.TextFrame2.HorizontalAnchor = msoAnchorCenter
+    s.TextFrame2.VerticalAnchor = msoAnchorMiddle
+    
+    s.TextFrame2.TextRange.Font.Size = 20
+    s.TextFrame2.TextRange.Font.Bold = msoTrue
+    s.TextFrame2.TextRange.Font.Fill.ForeColor.ObjectThemeColor = msoThemeColorLight1
+    
+    s.Fill.OneColorGradient msoGradientHorizontal, 1, 0
+    s.TextFrame2.TextRange.Font.Reflection.Type = msoReflectionType5
+    
+    s.Parent.Parent.Ungroup
+    s.OnAction = ThisWorkbook.Name & "!StateButton"
+    s.DrawingObject.ShapeRange.Regroup
+End Sub
+

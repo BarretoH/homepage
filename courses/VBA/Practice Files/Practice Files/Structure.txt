@@ -1,0 +1,30 @@
+Sub MakeReport()
+    Dim mySheet As Worksheet
+    Set mySheet = Worksheets.Add
+    mySheet.Name = "Report"
+End Sub
+
+Sub MakeNextReport()
+    Dim mySheet As Worksheet
+    Dim myBase As String
+    Dim mySuffix As Integer
+   
+    Set mySheet = Worksheets.Add
+    myBase = "Report"
+    mySuffix = 1
+    
+    On Error Resume Next
+    mySheet.Name = myBase & mySuffix
+End Sub
+
+Sub CheckFiles()
+    Workbooks.Open "Graphics"
+    ActiveWorkbook.Close
+    Workbooks.Open "Ranges"
+    ActiveWorkbook.Close
+    Workbooks.Open "Bad File Name"
+    ActiveWorkbook.Close
+    Workbooks.Open "Budget"
+    ActiveWorkbook.Close
+End Sub
+

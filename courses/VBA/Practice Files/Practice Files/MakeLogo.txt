@@ -1,0 +1,51 @@
+Sub MakeLogo()
+    Dim s As Shape
+    Dim tf As TextFrame2
+    Dim tr As TextRange2
+    Dim sf As ShadowFormat
+    
+    Set s = ActiveSheet.Shapes.AddShape(msoShapeUpArrowCallout, 10, 10, 10, 10)
+    s.Name = "Logo"
+    s.Left = Range("C6").Left
+    s.Top = Range("C6").Top
+    s.Width = Range("C:F").Width
+    s.Height = Range("6:15").Height
+    
+    s.Adjustments(1) = 1.2
+    s.Adjustments(2) = 0.6
+    s.Adjustments(3) = 0.15
+    s.Adjustments(4) = 0.7
+    
+    s.Line.Visible = msoFalse
+    s.Fill.ForeColor.ObjectThemeColor = msoThemeColorAccent2
+    s.Fill.ForeColor.TintAndShade = -0.3
+    
+    Set tf = s.TextFrame2
+    Set tr = tf.TextRange
+    tr = "Lucerne" & vbCrLf & "Publishing"
+    tr.Font.Size = 28
+    tr.Font.Bold = msoTrue
+    tr.Font.Spacing = 2
+    tf.VerticalAnchor = msoAnchorBottom
+    tf.MarginBottom = 20
+    
+    tr.Font.Fill.ForeColor.ObjectThemeColor = msoThemeColorAccent2
+    tr.Font.Fill.ForeColor.TintAndShade = -0.6
+    tr.Font.Line.Visible = msoTrue
+    tr.Font.Line.ForeColor.ObjectThemeColor = msoThemeColorAccent2
+    tr.Font.Line.ForeColor.TintAndShade = 0.3
+
+    Set sf = tr.Font.Shadow
+    sf.Style = msoShadowStyleOuterShadow
+    sf.ForeColor.ObjectThemeColor = msoThemeColorLight1
+    sf.OffsetX = 5
+    sf.OffsetY = 5
+    sf.Blur = 8
+    
+    s.ThreeD.BevelTopDepth = 12
+    s.ThreeD.BevelTopInset = 24
+    s.ThreeD.BevelTopType = msoBevelSoftRound
+    
+    s.ThreeD.PresetMaterial = msoMaterialMetal2
+    s.ThreeD.PresetLighting = msoLightRigFlood
+End Sub

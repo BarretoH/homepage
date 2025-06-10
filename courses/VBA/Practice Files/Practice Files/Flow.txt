@@ -1,0 +1,67 @@
+Sub MoveRight()
+    ActiveCell.Offset(0, 1).Select
+End Sub
+
+Sub TestInput()
+    Dim myDate As String
+    myDate = InputBox("Enter Month in MMM-YYYY format")
+    MsgBox "Continue the macro"
+End Sub
+
+Sub CheckRun()
+    MsgBox "This takes a long time. Continue?"
+    MsgBox "Continue with slow macro..."
+End Sub
+
+Sub ProtectSheets()
+    Dim mySheet As Worksheet
+    Set mySheet = Worksheets(1)
+    mySheet.Select
+    mySheet.Protect "Password", True, True, True
+End Sub
+
+Sub CompareCells()
+    Dim i As Integer
+    Calculate
+    i = Range("New").Cells.Count
+    If Range("New").Cells(i) > Range("Old").Cells(i) Then
+        Range("New").Cells(i).Interior.Color = vbYellow
+    Else
+        Range("New").Cells(i).Interior.Color = vbCyan
+    End If
+End Sub
+
+Sub ListFiles()
+    Dim myRow As Integer
+    Dim myFile As String
+    
+    myRow = 1
+    myFile = Dir("*.xls")
+    Cells(myRow, 1) = myFile
+        
+    myRow = myRow + 1
+    myFile = Dir
+    Cells(myRow, 1) = myFile
+End Sub
+
+Sub PrintOrders()
+    Dim myRow As Long
+    Dim myStop As Long
+    Workbooks.Open FileName:="orders.xlsx"
+    Columns("E:E").Cut
+    Columns("A:A").Insert Shift:=xlToRight
+    Range("A1").CurrentRegion.Sort Key1:="Category", _
+        Order1:=xlAscending, Header:=xlYes
+    myStop = Range("A1").CurrentRegion.Rows.Count
+    For myRow = 3 To myStop
+        If Cells(myRow, 1) <> Cells(myRow + 1, 1) Then
+            Cells(myRow, 1).Select
+            ActiveCell.PageBreak = xlPageBreakManual
+        End If
+    Next myRow
+    Cells(myRow, 1).Select
+    ActiveSheet.PageSetup.PrintTitleRows = "$1:$1"
+    ActiveSheet.PrintPreview
+    ActiveWorkbook.Close SaveChanges:=False
+End Sub
+
