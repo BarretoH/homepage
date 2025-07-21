@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Send My Location</title>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+  </head>
+  <body>
+    <h2>Sending Location...</h2>
+    <p id="status">Waiting for permission...</p>
+
+    <script>
+      // Replace with your actual Firebase config:
+const firebaseConfig = {
+  apiKey: "AIzaSyBEIockrAeynpeS8BYxHXOKSzCDEq10ijE",
+  authDomain: "donde-esta-papi.firebaseapp.com",
+  databaseURL: "https://donde-esta-papi-default-rtdb.firebaseio.com",
+  projectId: "donde-esta-papi",
+  storageBucket: "donde-esta-papi.firebasestorage.app",
+  messagingSenderId: "70591848578",
+  appId: "1:70591848578:web:b4d472ba9f49f2cf51949b",
+  measurementId: "G-363H0T42T8"
+};
+
+      firebase.initializeApp(firebaseConfig);
+      const db = firebase.database();
+
+      function updateLocation() {
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            const coords = {
+              lat: pos.coords.latitude,
+              lng: pos.coords.longitude,
+              timestamp: Date.now()
+            };
+            db.ref("phoneLocation").set(coords);
+            document.getElementById("status").textContent = "Location sent: " + new Date().toLocaleTimeString();
+          },
+          (err) => {
+            document.getElementById("status").textContent = "Error: " + err.message;
+          }
+        );
+      }
+
+      // Get location every 5 seconds
+      setInterval(updateLocation, 5000);
+    </script>
+  </body>
+</html>
