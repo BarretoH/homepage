@@ -61,22 +61,24 @@
         });
       }
 
-      function checkPassword() {
-        const inputPw = document.getElementById("pwInput").value;
-        db.ref("viewerSecret").once("value").then((snapshot) => {
-          const storedPw = snapshot.val();
-          if (inputPw === storedPw) {
-            document.getElementById("pwDiv").style.display = "none";
-            document.getElementById("map").style.display = "block";
-            initMap();
-          } else {
-            document.getElementById("pwError").innerText = "Incorrect password.";
-          }
-        }).catch((error) => {
-          console.error("Error reading password:", error);
-          document.getElementById("pwError").innerText = "Error checking password.";
-        });
-      }
+function checkPassword() {
+  const inputPw = document.getElementById("pwInput").value;
+  db.ref("viewerSecret").once("value").then((snapshot) => {
+    const storedPw = snapshot.val();
+    console.log("Password in Firebase:", storedPw);
+    console.log("Password typed:", inputPw);
+    if (inputPw === storedPw) {
+      document.getElementById("pwDiv").style.display = "none";
+      document.getElementById("map").style.display = "block";
+      initMap();
+    } else {
+      document.getElementById("pwError").innerText = "Incorrect password.";
+    }
+  }).catch((error) => {
+    console.error("Error reading password:", error);
+    document.getElementById("pwError").innerText = "Error checking password.";
+  });
+}
     </script>
 
     <!-- Google Maps API -->
