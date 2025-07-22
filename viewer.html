@@ -21,4 +21,67 @@
     <div id="pwDiv">
       <p>Enter password to view location:</p>
       <input type="password" id="pwInput" placeholder="Password">
-      <button onclick="checkPassword()">Submit</button
+      <button onclick="checkPassword()">Submit</button>
+      <p id="pwError" style="color: red;"></p>
+    </div>
+
+    <div id="map"></div>
+
+    <script>
+      const firebaseConfig = {
+        apiKey: "AIzaSyBEIockrAeynpeS8BYxHXOKSzCDEq10ijE",
+        authDomain: "donde-esta-papi.firebaseapp.com",
+        databaseURL: "https://donde-esta-papi-default-rtdb.firebaseio.com",
+        projectId: "donde-esta-papi",
+        storageBucket: "donde-esta-papi.appspot.com",
+        messagingSenderId: "70591848578",
+        appId: "1:70591848578:web:b4d472ba9f49f2cf51949b",
+        measurementId: "G-363H0T42T8"
+      };
+
+      firebase.initializeApp(firebaseConfig);
+      const db = firebase.database();
+
+      let map, marker;
+
+      function initMap() {
+        map = new google.maps.Map(document.getElementById("map"), {
+          zoom: 15,
+          center: { lat: 0, lng: 0 },
+        });
+        marker = new google.maps.Marker({ map });
+
+        db.ref("phoneLocation").on("value", (snapshot) => {
+          const data = snapshot.val();
+          if (data && data.lat && data.lng) {
+            const latLng = new google.maps.LatLng(data.lat, data.lng);
+            marker.setPosition(latLng);
+            map.setCenter(latLng);
+          }
+        });
+      }
+
+      function checkPassword() {
+        const inputPw = document.getElementById("pwInput").value;
+        db.ref("viewerSecret").once("value").then((snapshot) => {
+          const storedPw = snapshot.val();
+          if (inputPw === storedPw) {
+            document.getElementById("pwDiv").style.display = "none";
+            document.getElementById("map").style.display = "block";
+            initMap();
+          } else {
+            document.getElementById("pwError").innerText = "Incorrect password.";
+          }
+        }).catch((error) => {
+          console.error("Error reading password:", error);
+          document.getElementById("pwError").innerText = "Error checking password.";
+        });
+      }
+    </script>
+
+    <!-- Google Maps API -->
+    <script async
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDBjewnlM7Is-isIy0m0EH_cpQVxLWuIkk">
+    </script>
+  </body>
+</html>
