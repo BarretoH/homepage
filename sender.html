@@ -1,57 +1,59 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Send My Location</title>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
-  </head>
-  <body>
-    <h2>Sending Location...</h2>
-    <p id="status">Waiting for permission...</p>
+<head>
+  <title>Send My Location</title>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+</head>
+<body>
+  <h2>Sending Location...</h2>
+  <p id="status">Waiting for permission...</p>
 
-    <script>
-      // Replace with your actual Firebase config:
-const locationData = {
-  lat: coords.latitude,
-  lng: coords.longitude,
-  time: new Date().toISOString(),
-  secret: "cuban"  // Must match rule
-};
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBEIockrAeynpeS8BYxHXOKSzCDEq10ijE",
+      authDomain: "donde-esta-papi.firebaseapp.com",
+      databaseURL: "https://donde-esta-papi-default-rtdb.firebaseio.com",
+      projectId: "donde-esta-papi",
+      storageBucket: "donde-esta-papi.firebasestorage.app",
+      messagingSenderId: "70591848578",
+      appId: "1:70591848578:web:b4d472ba9f49f2cf51949b",
+      measurementId: "G-363H0T42T8"
+    };
 
-firebase.database().ref("phoneLocation").set(locationData);
-const firebaseConfig = {
-  apiKey: "AIzaSyBEIockrAeynpeS8BYxHXOKSzCDEq10ijE",
-  authDomain: "donde-esta-papi.firebaseapp.com",
-  databaseURL: "https://donde-esta-papi-default-rtdb.firebaseio.com",
-  projectId: "donde-esta-papi",
-  storageBucket: "donde-esta-papi.firebasestorage.app",
-  messagingSenderId: "70591848578",
-  appId: "1:70591848578:web:b4d472ba9f49f2cf51949b",
-  measurementId: "G-363H0T42T8"
-};
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
 
-      firebase.initializeApp(firebaseConfig);
-      const db = firebase.database();
+    function sendLocation(position) {
+      const coords = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude,
+        time: new Date().toISOString(),
+        secret: "cuban"  // make sure your Firebase rules allow this or remove if unnecessary
+      };
+      db.ref("phoneLocation").set(coords)
+        .then(() => {
+          document.getElementById("status").textContent = "Location sent at " + new Date().toLocaleTimeString();
+        })
+        .catch(error => {
+          document.getElementById("status").textContent = "Firebase error: " + error.message;
+        });
+    }
 
-      function updateLocation() {
-        navigator.geolocation.getCurrentPosition(
-          (pos) => {
-            const coords = {
-              lat: pos.coords.latitude,
-              lng: pos.coords.longitude,
-              timestamp: Date.now()
-            };
-            db.ref("phoneLocation").set(coords);
-            document.getElementById("status").textContent = "Location sent: " + new Date().toLocaleTimeString();
-          },
-          (err) => {
-            document.getElementById("status").textContent = "Error: " + err.message;
-          }
-        );
-      }
+    function handleError(error) {
+      document.getElementById("status").textContent = "Error: " + error.message;
+    }
 
-      // Get location every 5 seconds
-      setInterval(updateLocation, 5000);
-    </script>
-  </body>
+    if (navigator.geolocation) {
+      // Use watchPosition for continuous updates and immediate permission prompt
+      navigator.geolocation.watchPosition(sendLocation, handleError, {
+        enableHighAccuracy: true,
+        maximumAge: 0,
+        timeout: 10000
+      });
+    } else {
+      document.getElementById("status").textContent = "Geolocation is not supported by your browser.";
+    }
+  </script>
+</body>
 </html>
