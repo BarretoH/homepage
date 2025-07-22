@@ -11,9 +11,25 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
   </head>
+  <!-- Firebase libraries -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js"></script>
+
   <body>
     <h2>Phone Location</h2>
-    <div id="map"></div>
+<div id="loginDiv">
+  <h3>Login to View Location</h3>
+  <input type="email" id="email" placeholder="Email"><br>
+  <input type="password" id="password" placeholder="Password"><br>
+  <button onclick="login()">Login</button>
+  <p id="loginStatus" style="color: red;"></p>
+</div>
+
+<div id="mainContent" style="display: none;">
+  <h3>Phone Location</h3>
+  <div id="map" style="height: 400px;"></div>
+</div>
 
     <script>
 const firebaseConfig = {
