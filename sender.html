@@ -11,6 +11,14 @@
 
     <script>
       // Replace with your actual Firebase config:
+const locationData = {
+  lat: coords.latitude,
+  lng: coords.longitude,
+  time: new Date().toISOString(),
+  secret: "cuban"  // Must match rule
+};
+
+firebase.database().ref("phoneLocation").set(locationData);
 const firebaseConfig = {
   apiKey: "AIzaSyBEIockrAeynpeS8BYxHXOKSzCDEq10ijE",
   authDomain: "donde-esta-papi.firebaseapp.com",
