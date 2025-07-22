@@ -1,35 +1,16 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Track My Phone</title>
-  <style>
-    #map {
-      height: 90vh;
-      width: 100%;
-    }
-  </style>
-  <!-- Firebase v10 Modular SDK -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js"></script>
-</head>
 <body>
-  <h2>Phone Location</h2>
+  <h2>Track My Phone</h2>
 
-  <div id="loginDiv">
-    <h3>Login to View Location</h3>
-    <input type="email" id="email" placeholder="Email"><br>
-    <input type="password" id="password" placeholder="Password"><br>
-    <button onclick="login()">Login</button>
-    <p id="loginStatus" style="color: red;"></p>
+  <div id="pwDiv">
+    <p>Enter password to view location:</p>
+    <input type="password" id="pwInput" placeholder="Password">
+    <button onclick="checkPassword()">Submit</button>
+    <p id="pwError" style="color: red;"></p>
   </div>
 
-  <div id="mainContent" style="display: none;">
-    <div id="map"></div>
-  </div>
+  <div id="map" style="height: 90vh; width: 100%; display: none;"></div>
 
   <script>
-    // Your Firebase config
     const firebaseConfig = {
       apiKey: "AIzaSyBEIockrAeynpeS8BYxHXOKSzCDEq10ijE",
       authDomain: "donde-esta-papi.firebaseapp.com",
@@ -41,28 +22,10 @@
       measurementId: "G-363H0T42T8"
     };
 
-    // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
     const db = firebase.database();
 
     let map, marker;
-
-    function login() {
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-
-      auth.signInWithEmailAndPassword(email, password)
-        .then(() => {
-          document.getElementById("loginDiv").style.display = "none";
-          document.getElementById("mainContent").style.display = "block";
-          initMap(); // Only init map after login
-          loadLocation(); // Start listening to Firebase
-        })
-        .catch((error) => {
-          document.getElementById("loginStatus").textContent = "Login failed: " + error.message;
-        });
-    }
 
     function initMap() {
       map = new google.maps.Map(document.getElementById("map"), {
@@ -70,23 +33,33 @@
         center: { lat: 0, lng: 0 },
       });
       marker = new google.maps.Marker({ map });
-    }
 
-    function loadLocation() {
       db.ref("phoneLocation").on("value", (snapshot) => {
         const data = snapshot.val();
-        if (data && data.lat && data.lng) {
+        if (data) {
           const latLng = new google.maps.LatLng(data.lat, data.lng);
           marker.setPosition(latLng);
           map.setCenter(latLng);
         }
       });
     }
+
+    function checkPassword() {
+      const inputPw = document.getElementById("pwInput").value;
+      db.ref("viewerSecret").once("value").then((snapshot) => {
+        const storedPw = snapshot.val();
+        if (inputPw === storedPw) {
+          document.getElementById("pwDiv").style.display = "none";
+          document.getElementById("map").style.display = "block";
+          initMap();
+        } else {
+          document.getElementById("pwError").innerText = "Incorrect password.";
+        }
+      });
+    }
   </script>
 
-  <!-- Google Maps API -->
   <script async
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDBjewnlM7Is-isIy0m0EH_cpQVxLWuIkk&callback=initMap">
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDBjewnlM7Is-isIy0m0EH_cpQVxLWuIkk">
   </script>
 </body>
-</html>
