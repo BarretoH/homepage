@@ -30,7 +30,7 @@
   <div id="map"></div>
 
   <!-- Google Maps JavaScript API -->
-  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDBjewnlM7Is-isIy0m0EH_cpQVxLWuIkk"></script>
 
   <script>
     const firebaseConfig = {
@@ -50,7 +50,7 @@
     let markers = [];
     let pathPolyline;
 
-    function initMap() {
+     initMap() {
       map = new google.maps.Map(document.getElementById("map"), {
         zoom: 2,
         center: { lat: 0, lng: 0 }
@@ -58,7 +58,7 @@
       loadLocationHistory();
     }
 
-    function clearMap() {
+     clearMap() {
       markers.forEach(marker => marker.setMap(null));
       markers = [];
       if (pathPolyline) {
@@ -67,7 +67,7 @@
       }
     }
 
-    function loadLocationHistory() {
+     loadLocationHistory() {
       const days = parseInt(document.getElementById('daysSelect').value);
       const cutoff = Date.now() - days * 24 * 60 * 60 * 1000;
 
