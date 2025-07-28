@@ -1,117 +1,115 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Location History Viewer (Google Maps)</title>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
-    <style>
-      #map {
-        height: 90vh;
-        width: 100%;
+<head>
+  <title>Location History Viewer (Google Maps)</title>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+  <style>
+    #map {
+      height: 90vh;
+      width: 100%;
+    }
+    #controls {
+      padding: 10px;
+      background-color: #f8f8f8;
+      font-family: sans-serif;
+    }
+  </style>
+</head>
+<body>
+  <div id="controls">
+    Show location history for the past:
+    <select id="daysSelect">
+      <option value="1">1 day</option>
+      <option value="3">3 days</option>
+      <option value="7" selected>7 days</option>
+      <option value="30">30 days</option>
+    </select>
+    <button onclick="loadLocationHistory()">Update Map</button>
+  </div>
+  <div id="map"></div>
+
+  <!-- Google Maps JavaScript API -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBEIockrAeynpeS8BYxHXOKSzCDEq10ijE",
+      authDomain: "donde-esta-papi.firebaseapp.com",
+      databaseURL: "https://donde-esta-papi-default-rtdb.firebaseio.com",
+      projectId: "donde-esta-papi",
+      storageBucket: "donde-esta-papi.firebasestorage.app",
+      messagingSenderId: "70591848578",
+      appId: "1:70591848578:web:b4d472ba9f49f2cf51949b",
+      measurementId: "G-363H0T42T8"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    let map;
+    let markers = [];
+    let pathPolyline;
+
+    function initMap() {
+      map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 2,
+        center: { lat: 0, lng: 0 }
+      });
+      loadLocationHistory();
+    }
+
+    function clearMap() {
+      markers.forEach(marker => marker.setMap(null));
+      markers = [];
+      if (pathPolyline) {
+        pathPolyline.setMap(null);
+        pathPolyline = null;
       }
-      #controls {
-        padding: 10px;
-        background-color: #f8f8f8;
-        font-family: sans-serif;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="controls">
-      Show location history for the past:
-      <select id="daysSelect">
-        <option value="1">1 day</option>
-        <option value="3">3 days</option>
-        <option value="7" selected>7 days</option>
-        <option value="30">30 days</option>
-      </select>
-      <button onclick="loadLocationHistory()">Update Map</button>
-    </div>
-    <div id="map"></div>
+    }
 
-    <!-- Google Maps JavaScript API (replace YOUR_API_KEY) -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY"></script>
+    function loadLocationHistory() {
+      const days = parseInt(document.getElementById('daysSelect').value);
+      const cutoff = Date.now() - days * 24 * 60 * 60 * 1000;
 
-    <script>
-      // Firebase config
-      const firebaseConfig = {
-        apiKey: "AIzaSyBEIockrAeynpeS8BYxHXOKSzCDEq10ijE",
-        authDomain: "donde-esta-papi.firebaseapp.com",
-        databaseURL: "https://donde-esta-papi-default-rtdb.firebaseio.com",
-        projectId: "donde-esta-papi",
-        storageBucket: "donde-esta-papi.firebasestorage.app",
-        messagingSenderId: "70591848578",
-        appId: "1:70591848578:web:b4d472ba9f49f2cf51949b",
-        measurementId: "G-363H0T42T8"
-      };
-      firebase.initializeApp(firebaseConfig);
-      const db = firebase.database();
+      db.ref("phoneLocationHistory").once("value", (snapshot) => {
+        clearMap();
+        const pathCoords = [];
 
-      let map;
-      let markers = [];
-      let pathPolyline;
+        snapshot.forEach(child => {
+          const data = child.val();
+          if (data.timestamp >= cutoff) {
+            const latLng = new google.maps.LatLng(data.lat, data.lng);
+            pathCoords.push(latLng);
 
-      function initMap() {
-        map = new google.maps.Map(document.getElementById("map"), {
-          zoom: 2,
-          center: { lat: 0, lng: 0 }
-        });
-        loadLocationHistory();
-      }
-
-      function clearMap() {
-        markers.forEach(marker => marker.setMap(null));
-        markers = [];
-        if (pathPolyline) {
-          pathPolyline.setMap(null);
-          pathPolyline = null;
-        }
-      }
-
-      function loadLocationHistory() {
-        const days = parseInt(document.getElementById('daysSelect').value);
-        const cutoff = Date.now() - days * 24 * 60 * 60 * 1000;
-
-        db.ref("phoneLocationHistory").once("value", (snapshot) => {
-          clearMap();
-          const pathCoords = [];
-
-          snapshot.forEach(child => {
-            const data = child.val();
-            if (data.timestamp >= cutoff) {
-              const latLng = new google.maps.LatLng(data.lat, data.lng);
-              pathCoords.push(latLng);
-
-              const marker = new google.maps.Marker({
-                position: latLng,
-                map: map,
-                title: new Date(data.timestamp).toLocaleString()
-              });
-              markers.push(marker);
-            }
-          });
-
-          if (pathCoords.length > 0) {
-            map.setCenter(pathCoords[pathCoords.length - 1]);
-            map.setZoom(15);
-
-            if (pathCoords.length > 1) {
-              pathPolyline = new google.maps.Polyline({
-                path: pathCoords,
-                geodesic: true,
-                strokeColor: "#0000FF",
-                strokeOpacity: 1.0,
-                strokeWeight: 2
-              });
-              pathPolyline.setMap(map);
-            }
-          } else {
-            alert("No data found for the selected time range.");
+            const marker = new google.maps.Marker({
+              position: latLng,
+              map: map,
+              title: new Date(data.timestamp).toLocaleString()
+            });
+            markers.push(marker);
           }
         });
-      }
 
-      window.onload = initMap;
-    </script>
-  </body>
+        if (pathCoords.length > 0) {
+          map.setCenter(pathCoords[pathCoords.length - 1]);
+          map.setZoom(15);
+          if (pathCoords.length > 1) {
+            pathPolyline = new google.maps.Polyline({
+              path: pathCoords,
+              geodesic: true,
+              strokeColor: "#0000FF",
+              strokeOpacity: 1.0,
+              strokeWeight: 2
+            });
+            pathPolyline.setMap(map);
+          }
+        } else {
+          alert("No data found for the selected time range.");
+        }
+      });
+    }
+
+    window.onload = initMap;
+  </script>
+</body>
 </html>
