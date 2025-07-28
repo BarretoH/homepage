@@ -50,13 +50,13 @@
     let markers = [];
     let pathPolyline;
 
-     initMap() {
-      map = new google.maps.Map(document.getElementById("map"), {
-        zoom: 2,
-        center: { lat: 0, lng: 0 }
-      });
-      loadLocationHistory();
-    }
+     function initMap() {
+    map = new google.maps.Map(document.getElementById("map"), {
+      zoom: 2,
+      center: { lat: 0, lng: 0 }
+    });
+    loadLocationHistory();
+  }
 
      clearMap() {
       markers.forEach(marker => marker.setMap(null));
