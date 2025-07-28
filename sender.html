@@ -1,59 +1,117 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Send My Location</title>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
-</head>
-<body>
-  <h2>Sending Location...</h2>
-  <p id="status">Waiting for permission...</p>
+  <head>
+    <title>Location History Viewer (Google Maps)</title>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+    <style>
+      #map {
+        height: 90vh;
+        width: 100%;
+      }
+      #controls {
+        padding: 10px;
+        background-color: #f8f8f8;
+        font-family: sans-serif;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="controls">
+      Show location history for the past:
+      <select id="daysSelect">
+        <option value="1">1 day</option>
+        <option value="3">3 days</option>
+        <option value="7" selected>7 days</option>
+        <option value="30">30 days</option>
+      </select>
+      <button onclick="loadLocationHistory()">Update Map</button>
+    </div>
+    <div id="map"></div>
 
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyBEIockrAeynpeS8BYxHXOKSzCDEq10ijE",
-      authDomain: "donde-esta-papi.firebaseapp.com",
-      databaseURL: "https://donde-esta-papi-default-rtdb.firebaseio.com",
-      projectId: "donde-esta-papi",
-      storageBucket: "donde-esta-papi.firebasestorage.app",
-      messagingSenderId: "70591848578",
-      appId: "1:70591848578:web:b4d472ba9f49f2cf51949b",
-      measurementId: "G-363H0T42T8"
-    };
+    <!-- Google Maps JavaScript API (replace YOUR_API_KEY) -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY"></script>
 
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
-
-    function sendLocation(position) {
-      const coords = {
-        lat: position.coords.latitude,
-        lng: position.coords.longitude,
-        time: new Date().toISOString(),
-        secret: "cuban"  // make sure your Firebase rules allow this or remove if unnecessary
+    <script>
+      // Firebase config
+      const firebaseConfig = {
+        apiKey: "AIzaSyBEIockrAeynpeS8BYxHXOKSzCDEq10ijE",
+        authDomain: "donde-esta-papi.firebaseapp.com",
+        databaseURL: "https://donde-esta-papi-default-rtdb.firebaseio.com",
+        projectId: "donde-esta-papi",
+        storageBucket: "donde-esta-papi.firebasestorage.app",
+        messagingSenderId: "70591848578",
+        appId: "1:70591848578:web:b4d472ba9f49f2cf51949b",
+        measurementId: "G-363H0T42T8"
       };
-      db.ref("phoneLocation").set(coords)
-        .then(() => {
-          document.getElementById("status").textContent = "Location sent at " + new Date().toLocaleTimeString();
-        })
-        .catch(error => {
-          document.getElementById("status").textContent = "Firebase error: " + error.message;
+      firebase.initializeApp(firebaseConfig);
+      const db = firebase.database();
+
+      let map;
+      let markers = [];
+      let pathPolyline;
+
+      function initMap() {
+        map = new google.maps.Map(document.getElementById("map"), {
+          zoom: 2,
+          center: { lat: 0, lng: 0 }
         });
-    }
+        loadLocationHistory();
+      }
 
-    function handleError(error) {
-      document.getElementById("status").textContent = "Error: " + error.message;
-    }
+      function clearMap() {
+        markers.forEach(marker => marker.setMap(null));
+        markers = [];
+        if (pathPolyline) {
+          pathPolyline.setMap(null);
+          pathPolyline = null;
+        }
+      }
 
-    if (navigator.geolocation) {
-      // Use watchPosition for continuous updates and immediate permission prompt
-      navigator.geolocation.watchPosition(sendLocation, handleError, {
-        enableHighAccuracy: true,
-        maximumAge: 0,
-        timeout: 10000
-      });
-    } else {
-      document.getElementById("status").textContent = "Geolocation is not supported by your browser.";
-    }
-  </script>
-</body>
+      function loadLocationHistory() {
+        const days = parseInt(document.getElementById('daysSelect').value);
+        const cutoff = Date.now() - days * 24 * 60 * 60 * 1000;
+
+        db.ref("phoneLocationHistory").once("value", (snapshot) => {
+          clearMap();
+          const pathCoords = [];
+
+          snapshot.forEach(child => {
+            const data = child.val();
+            if (data.timestamp >= cutoff) {
+              const latLng = new google.maps.LatLng(data.lat, data.lng);
+              pathCoords.push(latLng);
+
+              const marker = new google.maps.Marker({
+                position: latLng,
+                map: map,
+                title: new Date(data.timestamp).toLocaleString()
+              });
+              markers.push(marker);
+            }
+          });
+
+          if (pathCoords.length > 0) {
+            map.setCenter(pathCoords[pathCoords.length - 1]);
+            map.setZoom(15);
+
+            if (pathCoords.length > 1) {
+              pathPolyline = new google.maps.Polyline({
+                path: pathCoords,
+                geodesic: true,
+                strokeColor: "#0000FF",
+                strokeOpacity: 1.0,
+                strokeWeight: 2
+              });
+              pathPolyline.setMap(map);
+            }
+          } else {
+            alert("No data found for the selected time range.");
+          }
+        });
+      }
+
+      window.onload = initMap;
+    </script>
+  </body>
 </html>
