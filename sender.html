@@ -1,22 +1,38 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Location History Viewer (Google Maps)</title>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+    <title>Track Papi's Phone</title>
     <style>
       #map {
         height: 90vh;
         width: 100%;
+        display: none;
       }
       #controls {
+        display: none;
         padding: 10px;
-        background-color: #f8f8f8;
+        background: #f8f8f8;
         font-family: sans-serif;
       }
-    </style>
+    </style> 
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
   </head>
+
   <body>
+    <h2>Track Papi's Phone</h2>
+
+    <!-- Password prompt -->
+    <div id="pwDiv">
+      <p>Enter password to view location:</p>
+      <input type="password" id="pwInput" placeholder="Password">
+      <button onclick="checkPassword()">Submit</button>
+      <p id="pwError" style="color: red;"></p>
+    </div>
+
+    <!-- Controls for selecting history range -->
     <div id="controls">
       Show location history for the past:
       <select id="daysSelect">
@@ -27,10 +43,9 @@
       </select>
       <button onclick="loadLocationHistory()">Update Map</button>
     </div>
-    <div id="map"></div>
 
-    <!-- Google Maps JavaScript API (replace YOUR_API_KEY) -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY"></script>
+    <!-- Map display -->
+    <div id="map"></div>
 
     <script>
       // Firebase config
@@ -39,32 +54,35 @@
         authDomain: "donde-esta-papi.firebaseapp.com",
         databaseURL: "https://donde-esta-papi-default-rtdb.firebaseio.com",
         projectId: "donde-esta-papi",
-        storageBucket: "donde-esta-papi.firebasestorage.app",
+        storageBucket: "donde-esta-papi.appspot.com",
         messagingSenderId: "70591848578",
         appId: "1:70591848578:web:b4d472ba9f49f2cf51949b",
         measurementId: "G-363H0T42T8"
       };
+
       firebase.initializeApp(firebaseConfig);
       const db = firebase.database();
 
       let map;
       let markers = [];
-      let pathPolyline;
+      let polyline;
 
       function initMap() {
         map = new google.maps.Map(document.getElementById("map"), {
           zoom: 2,
           center: { lat: 0, lng: 0 }
         });
+
+        // Load default data (7 days)
         loadLocationHistory();
       }
 
       function clearMap() {
         markers.forEach(marker => marker.setMap(null));
         markers = [];
-        if (pathPolyline) {
-          pathPolyline.setMap(null);
-          pathPolyline = null;
+        if (polyline) {
+          polyline.setMap(null);
+          polyline = null;
         }
       }
 
@@ -72,16 +90,15 @@
         const days = parseInt(document.getElementById('daysSelect').value);
         const cutoff = Date.now() - days * 24 * 60 * 60 * 1000;
 
-        db.ref("phoneLocationHistory").once("value", (snapshot) => {
+        db.ref("phoneLocationHistory").once("value").then(snapshot => {
           clearMap();
-          const pathCoords = [];
+          const coords = [];
 
           snapshot.forEach(child => {
             const data = child.val();
             if (data.timestamp >= cutoff) {
               const latLng = new google.maps.LatLng(data.lat, data.lng);
-              pathCoords.push(latLng);
-
+              coords.push(latLng);
               const marker = new google.maps.Marker({
                 position: latLng,
                 map: map,
@@ -91,27 +108,49 @@
             }
           });
 
-          if (pathCoords.length > 0) {
-            map.setCenter(pathCoords[pathCoords.length - 1]);
-            map.setZoom(15);
-
-            if (pathCoords.length > 1) {
-              pathPolyline = new google.maps.Polyline({
-                path: pathCoords,
+          if (coords.length > 0) {
+            if (coords.length > 1) {
+              polyline = new google.maps.Polyline({
+                path: coords,
                 geodesic: true,
                 strokeColor: "#0000FF",
                 strokeOpacity: 1.0,
                 strokeWeight: 2
               });
-              pathPolyline.setMap(map);
+              polyline.setMap(map);
+              map.fitBounds(new google.maps.LatLngBounds(...coords));
+            } else {
+              map.setCenter(coords[0]);
+              map.setZoom(15);
             }
           } else {
-            alert("No data found for the selected time range.");
+            alert("No location data found for the selected time range.");
           }
         });
       }
 
-      window.onload = initMap;
+      function checkPassword() {
+        const inputPw = document.getElementById("pwInput").value;
+        db.ref("viewerSecret").once("value").then((snapshot) => {
+          const storedPw = snapshot.val();
+          if (inputPw === storedPw) {
+            document.getElementById("pwDiv").style.display = "none";
+            document.getElementById("controls").style.display = "block";
+            document.getElementById("map").style.display = "block";
+            initMap();
+          } else {
+            document.getElementById("pwError").innerText = "Incorrect password.";
+          }
+        }).catch((error) => {
+          console.error("Error reading password:", error);
+          document.getElementById("pwError").innerText = "Error checking password.";
+        });
+      }
+    </script>
+
+    <!-- Google Maps API (your key already present) -->
+    <script async
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDBjewnlM7Is-isIy0m0EH_cpQVxLWuIkk">
     </script>
   </body>
 </html>
