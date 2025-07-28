@@ -29,9 +29,6 @@
   </div>
   <div id="map"></div>
 
-  <!-- Google Maps JavaScript API -->
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDBjewnlM7Is-isIy0m0EH_cpQVxLWuIkk"></script>
-
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyBEIockrAeynpeS8BYxHXOKSzCDEq10ijE",
@@ -50,15 +47,15 @@
     let markers = [];
     let pathPolyline;
 
-     function initMap() {
-    map = new google.maps.Map(document.getElementById("map"), {
-      zoom: 2,
-      center: { lat: 0, lng: 0 }
-    });
-    loadLocationHistory();
-  }
+    function initMap() {
+      map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 2,
+        center: { lat: 0, lng: 0 }
+      });
+      loadLocationHistory();
+    }
 
-     clearMap() {
+    function clearMap() {
       markers.forEach(marker => marker.setMap(null));
       markers = [];
       if (pathPolyline) {
@@ -67,7 +64,7 @@
       }
     }
 
-     loadLocationHistory() {
+    function loadLocationHistory() {
       const days = parseInt(document.getElementById('daysSelect').value);
       const cutoff = Date.now() - days * 24 * 60 * 60 * 1000;
 
@@ -93,6 +90,7 @@
         if (pathCoords.length > 0) {
           map.setCenter(pathCoords[pathCoords.length - 1]);
           map.setZoom(15);
+
           if (pathCoords.length > 1) {
             pathPolyline = new google.maps.Polyline({
               path: pathCoords,
@@ -108,8 +106,11 @@
         }
       });
     }
-
-    window.onload = initMap;
   </script>
+
+  <!-- Google Maps JS API (with callback and best practice loading) -->
+  <script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDBjewnlM7Is-isIy0m0EH_cpQVxLWuIkk&callback=initMap"
+    async defer></script>
 </body>
 </html>
